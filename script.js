@@ -110,6 +110,16 @@ const archiveData = [
     }
 ];
 
+// File type icons
+const fileIcons = {
+    images: '🖼️',
+    videos: '🎬',
+    documents: '📄',
+    maps: '🗺️',
+    mods: '⚙️',
+    soundtracks: '🎵'
+};
+
 // State management
 let currentFilter = 'all';
 let currentSearch = '';
@@ -117,28 +127,21 @@ let filteredData = [...archiveData];
 
 // DOM elements
 const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
 const categoryFilter = document.getElementById('categoryFilter');
-const archiveGrid = document.getElementById('archiveGrid');
+const fileGrid = document.getElementById('fileGrid');
 const noResults = document.getElementById('noResults');
-const totalFilesEl = document.getElementById('totalFiles');
-const filteredFilesEl = document.getElementById('filteredFiles');
+const fileCountEl = document.getElementById('fileCount');
 
 // Initialize the page
 function init() {
-    updateStats();
-    renderArchive(archiveData);
+    renderFiles(archiveData);
+    updateFileCount();
     attachEventListeners();
 }
 
 // Attach event listeners
 function attachEventListeners() {
-    searchBtn.addEventListener('click', handleSearch);
-    searchInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    });
+    searchInput.addEventListener('input', handleSearch);
     categoryFilter.addEventListener('change', handleCategoryFilter);
 }
 
@@ -163,64 +166,71 @@ function applyFilters() {
         // Search filter
         const searchMatch = currentSearch === '' || 
             item.name.toLowerCase().includes(currentSearch) ||
-            item.description.toLowerCase().includes(currentSearch) ||
-            item.category.toLowerCase().includes(currentSearch);
+            item.description.toLowerCase().includes(currentSearch);
         
         return categoryMatch && searchMatch;
     });
     
-    renderArchive(filteredData);
-    updateFilteredCount();
+    renderFiles(filteredData);
+    updateFileCount();
 }
 
-// Render archive items
-function renderArchive(data) {
+// Get thumbnail class and check if file has preview
+function getFileClasses(category) {
+    const hasPreview = category === 'images' || category === 'videos';
+    return {
+        thumbnailClass: `file-thumbnail type-${category}${hasPreview ? ' has-preview' : ''}`,
+        hasPreview
+    };
+}
+
+// Render files
+function renderFiles(data) {
     if (data.length === 0) {
-        archiveGrid.style.display = 'none';
+        fileGrid.style.display = 'none';
         noResults.style.display = 'block';
         return;
     }
     
-    archiveGrid.style.display = 'grid';
+    fileGrid.style.display = 'grid';
     noResults.style.display = 'none';
     
-    archiveGrid.innerHTML = data.map(item => `
-        <div class="archive-item" data-id="${item.id}">
-            <span class="category-badge category-${item.category}">${item.category}</span>
-            <h3>${item.name}</h3>
-            <div class="file-info">
-                <strong>${item.fileType}</strong> • ${item.size} • ${item.date}
+    fileGrid.innerHTML = data.map(item => {
+        const { thumbnailClass } = getFileClasses(item.category);
+        const icon = fileIcons[item.category] || '📁';
+        
+        return `
+            <div class="file-item" data-id="${item.id}">
+                <div class="${thumbnailClass}">
+                    <div class="file-icon">${icon}</div>
+                </div>
+                <div class="file-name">${item.name}</div>
+                <div class="file-info">${item.fileType} • ${item.size}</div>
             </div>
-            <p class="description">${item.description}</p>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
-    // Add click handlers to archive items
-    document.querySelectorAll('.archive-item').forEach(item => {
+    // Add click handlers to file items
+    document.querySelectorAll('.file-item').forEach(item => {
         item.addEventListener('click', () => {
             const itemId = item.getAttribute('data-id');
-            handleItemClick(itemId);
+            handleFileClick(itemId);
         });
     });
 }
 
-// Handle item click
-function handleItemClick(itemId) {
+// Handle file click
+function handleFileClick(itemId) {
     const item = archiveData.find(i => i.id == itemId);
     if (item) {
-        alert(`File: ${item.name}\n\nCategory: ${item.category}\nType: ${item.fileType}\nSize: ${item.size}\n\nDescription: ${item.description}\n\n(In a real implementation, this would download or display the file)`);
+        alert(`${item.name}\n\n${item.description}\n\nType: ${item.fileType}\nSize: ${item.size}\nDate: ${item.date}\n\n(In a real implementation, this would open or download the file)`);
     }
 }
 
-// Update statistics
-function updateStats() {
-    totalFilesEl.textContent = archiveData.length;
-    updateFilteredCount();
-}
-
-// Update filtered count
-function updateFilteredCount() {
-    filteredFilesEl.textContent = filteredData.length;
+// Update file count
+function updateFileCount() {
+    const count = filteredData.length;
+    fileCountEl.textContent = `${count} item${count !== 1 ? 's' : ''}`;
 }
 
 // Initialize on page load
