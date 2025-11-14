@@ -66,6 +66,34 @@ body {
     padding: 6px 20px;
     font-size: 0.85rem;
     color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.breadcrumb-item:hover {
+    background: rgba(0, 120, 212, 0.1);
+    color: #0078d4;
+}
+
+.breadcrumb-separator {
+    color: #999;
+    user-select: none;
 }
 
 /* File Browser */
