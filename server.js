@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const fs = require('fs');
 const path = require('path');
 
@@ -10,8 +11,29 @@ const ARCHIVE_ROOT = '/root/archive';
 // Enable CORS for frontend
 app.use(cors());
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(__dirname));
+// Rate limiter for API endpoints
+const apiLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.'
+});
+
+// Serve only specific static files, not the entire directory
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/script.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'script.js'));
+});
+
+app.get('/styles.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'styles.css'));
+});
 
 // Helper function to get file size
 function getFileSize(filePath) {
@@ -58,8 +80,8 @@ function getFileCategory(fileName) {
     return 'documents'; // Default category
 }
 
-// API endpoint to list files and directories
-app.get('/api/files', (req, res) => {
+// API endpoint to list files and directories (with rate limiting)
+app.get('/api/files', apiLimiter, (req, res) => {
     const requestedPath = req.query.path || '';
     const fullPath = path.join(ARCHIVE_ROOT, requestedPath);
     
