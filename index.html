@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gears Archive - All Things Gears of War</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎮 Gears Archive</h1>
+            <p class="subtitle">Your comprehensive archive for all things Gears of War</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search files by name or description..." />
+                <button id="searchBtn">Search</button>
+            </div>
+            <div class="filter-controls">
+                <label>Filter by Category:</label>
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="images">Images</option>
+                    <option value="documents">Documents</option>
+                    <option value="videos">Videos</option>
+                    <option value="maps">Maps</option>
+                    <option value="mods">Mods</option>
+                    <option value="soundtracks">Soundtracks</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stat-card">
+                <span class="stat-number" id="totalFiles">0</span>
+                <span class="stat-label">Total Files</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="filteredFiles">0</span>
+                <span class="stat-label">Showing</span>
+            </div>
+        </section>
+
+        <section class="archive-section">
+            <h2>Archive Contents</h2>
+            <div id="archiveGrid" class="archive-grid">
+                <!-- Archive items will be dynamically inserted here -->
+            </div>
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No files found matching your search criteria.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Gears Archive. Community-maintained archive for Gears of War content.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
