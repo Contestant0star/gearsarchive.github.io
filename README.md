@@ -1,10 +1,11 @@
 # gearsarchive.github.io
 
-A file explorer web application for browsing the Gears of War archive located at `/root/archive`.
+A file explorer web application for browsing the Gears of War archive.
 
 ## Features
 
-- **File System Explorer**: Browse files and folders from `/root/archive` directory
+- **File System Explorer**: Browse files and folders from the archive directory
+- **Configurable Archive Path**: Uses `./archive` by default, or set via `ARCHIVE_ROOT` environment variable
 - **Nested Navigation**: Support for subdirectories with breadcrumb navigation
 - **File Type Detection**: Automatic categorization of files by extension (images, videos, documents, maps, mods, soundtracks)
 - **Search**: Filter files by name
@@ -14,7 +15,7 @@ A file explorer web application for browsing the Gears of War archive located at
 ## Requirements
 
 - Node.js (v12 or higher)
-- Access to `/root/archive` directory (may require sudo)
+- Archive directory (defaults to `./archive` in the repository)
 
 ## Installation
 
@@ -29,24 +30,32 @@ cd gearsarchive.github.io
 npm install
 ```
 
-3. Ensure the `/root/archive` directory exists and contains files:
+## Configuration
+
+The archive directory can be configured via the `ARCHIVE_ROOT` environment variable:
+
 ```bash
-sudo mkdir -p /root/archive
-# Add your files to /root/archive
+# Use default ./archive directory (in repository)
+npm start
+
+# Or use a custom archive location
+ARCHIVE_ROOT=/root/archive npm start
 ```
+
+Default: `./archive` (relative to the repository root)
 
 ## Running the Application
 
-Start the server (requires sudo to access `/root/archive`):
+Start the server:
 
 ```bash
-sudo npm start
+npm start
 ```
 
 Or:
 
 ```bash
-sudo node server.js
+node server.js
 ```
 
 The application will be available at: `http://localhost:3000`
@@ -84,7 +93,7 @@ Files are automatically categorized based on their extension:
 
 ## Security
 
-The server includes path validation to prevent directory traversal attacks and ensures all file access is restricted to the `/root/archive` directory.
+The server includes path validation to prevent directory traversal attacks and ensures all file access is restricted to the configured archive directory (default: `./archive`).
 
 ## License
 
