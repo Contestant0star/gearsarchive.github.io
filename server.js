@@ -6,7 +6,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ARCHIVE_ROOT = '/root/archive';
+const ARCHIVE_ROOT = process.env.ARCHIVE_ROOT || path.join(__dirname, 'archive');
 
 // Enable CORS for frontend
 app.use(cors());
